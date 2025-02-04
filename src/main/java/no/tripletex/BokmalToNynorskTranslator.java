@@ -86,7 +86,7 @@ public class BokmalToNynorskTranslator {
                 .model(MODEL)
                 .messages(messages)
                 .n(1)
-                .maxTokens(500)
+                .maxTokens(16384)
                 .temperature(0.2)
                 .build();
 
