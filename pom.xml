@@ -9,9 +9,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.theokanning.openai-gpt3-java</groupId>
+            <groupId>io.github.lambdua</groupId>
             <artifactId>service</artifactId>
-            <version>0.18.2</version>
+            <version>0.22.8</version>
         </dependency>
 
         <dependency>

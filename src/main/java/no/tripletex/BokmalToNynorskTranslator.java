@@ -1,8 +1,6 @@
 package no.tripletex;
 
-import com.theokanning.openai.completion.chat.ChatCompletionChoice;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
+import com.theokanning.openai.completion.chat.*;
 import com.theokanning.openai.service.OpenAiService;
 
 import java.io.*;
@@ -31,7 +29,7 @@ public class BokmalToNynorskTranslator {
                 }
             }
 
-            String apiKey =  "API key";
+            String apiKey =  "key";
             if (apiKey == null || apiKey.isEmpty()) {
                 throw new IllegalStateException("Missing OpenAI API key. Set OPENAI_API_KEY environment variable.");
             }
@@ -67,7 +65,7 @@ public class BokmalToNynorskTranslator {
 
     private static String translateText(OpenAiService service, String text) {
         List<ChatMessage> messages = new ArrayList<>();
-        messages.add(new ChatMessage("system",
+        ChatMessage systemMessage = new SystemMessage(
                 "You are a translation assistant. You are translating the accounting system Tripletex from Norwegian Bokmål to Nynorsk. " +
                         "The input text may contain special Norwegian characters (e.g., æ, ø, å) and HTML characters, links and sometimes javascript. " +
                         "You must **preserve them exactly as they are** in the translation. " +
@@ -79,22 +77,26 @@ public class BokmalToNynorskTranslator {
                         "Verify that the resulting text is spelled correctly in nynorsk language. Do not replace Unicode escape sequence with HTML entity. "+
                         "Do not replace ø æ å with HTML entity. Keep existing Unicode escape sequence. Preserve existing HTML syntax. The resulting text will be stored in a Java .properties file, so consider Java." +
                         "Verifiser at teksten er skrevet på korrekt nynorsk for bruk i et økonomisystem. Bruk Unicode escape sequence i tekst for æ ø å i tekst hvor det allerede er i bruk. "
-        ));
-        messages.add(new ChatMessage("user", "Bokmål: " + text + "\nNynorsk:"));
+        );
 
-        ChatCompletionRequest request = ChatCompletionRequest.builder()
-                .messages(messages)
+        messages.add(systemMessage);
+        messages.add(new UserMessage("Bokmål: " + text + "\nNynorsk:"));
+
+        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .model(MODEL)
+                .messages(messages)
+                .n(1)
+                .maxTokens(500)
                 .temperature(0.2)
-                .maxTokens(16384)
                 .build();
 
         int maxRetries = 10;
         int attempt = 0;
+
         while (attempt <= maxRetries) {
             try {
-                List<ChatCompletionChoice> choices = service.createChatCompletion(request).getChoices();
-                return choices.isEmpty() ? text : choices.get(0).getMessage().getContent().trim();
+                ChatCompletionResult chatCompletion = service.createChatCompletion(chatCompletionRequest);
+                return chatCompletion.getChoices().get(0).getMessage().getContent().trim();
             } catch (Exception e) {
                 System.err.println("Error during translation (attempt " + (attempt + 1) + "): " + e.getMessage());
                 if (attempt == maxRetries) {
@@ -106,4 +108,5 @@ public class BokmalToNynorskTranslator {
         }
         return text;
     }
+
 }
