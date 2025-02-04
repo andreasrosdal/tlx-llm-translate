@@ -31,7 +31,7 @@ public class BokmalToNynorskTranslator {
                 }
             }
 
-            String apiKey =  "API-KEY";
+            String apiKey =  "API key";
             if (apiKey == null || apiKey.isEmpty()) {
                 throw new IllegalStateException("Missing OpenAI API key. Set OPENAI_API_KEY environment variable.");
             }
@@ -78,7 +78,7 @@ public class BokmalToNynorskTranslator {
                         "Do not add any extra explanations. Only return the translated text and nothing else." +
                         "Verify that the resulting text is spelled correctly in nynorsk language. Do not replace Unicode escape sequence with HTML entity. "+
                         "Do not replace ø æ å with HTML entity. Keep existing Unicode escape sequence. Preserve existing HTML syntax. " +
-                        "Verifiser at teksten er skrevet på korrekt nynorsk for bruk i et økonomisystem. Bruk HTML entities i stedet for æ ø å i tekst hvor det allerede er i bruk. "
+                        "Verifiser at teksten er skrevet på korrekt nynorsk for bruk i et økonomisystem. Bruk Unicode escape sequence i tekst for æ ø å i tekst hvor det allerede er i bruk. "
         ));
         messages.add(new ChatMessage("user", "Bokmål: " + text + "\nNynorsk:"));
 
