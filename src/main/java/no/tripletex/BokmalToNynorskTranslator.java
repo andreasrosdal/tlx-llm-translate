@@ -77,7 +77,8 @@ public class BokmalToNynorskTranslator {
                         "Verify that the resulting text is spelled correctly in nynorsk language. Do not replace Unicode escape sequence with HTML entity. "+
                         "Replace ø æ å with Unicode escape sequences. Keep existing Unicode escape sequence. Preserve existing HTML syntax. The resulting text will be stored in a Java .properties file, so consider Java." +
                         "The result text must be on one line. No newlines. Do not use your ```html formatting. There was some \"Malformed \uxxxx encoding.\" errors, so do not use this type of encoding of characters. " +
-                        "Verifiser at teksten er skrevet på korrekt nynorsk for bruk i et økonomisystem. Bruk Unicode escape sequence i tekst for æ ø å i tekst hvor det allerede er i bruk. "
+                        "Verifiser at teksten er skrevet på korrekt nynorsk for bruk i et økonomisystem. Bruk Unicode escape sequence i tekst for æ ø å i tekst hvor det allerede er i bruk. " + 
+                        " Must be a valid Java properties file.  "
         );
 
         messages.add(systemMessage);
